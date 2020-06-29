@@ -6,12 +6,17 @@
 //  Copyright © 2020 App Designer2. All rights reserved.
 //
 
+
 import SwiftUI
 
 struct DetailView: View {
     //var detail : Info
     @Environment(\.managedObjectContext) var moc
+    
+    //By only use @ObservedObject = entityName() we are allow to use all its data to display on the DetailView
     @ObservedObject var detail = Food()
+    
+    
     @State var image : Data = .init(count: 0)
     
     @State var order = false
@@ -26,9 +31,10 @@ struct DetailView: View {
     
     var date = Date()
     
-    @State var offer = 0
+     var offer : Int64 = 0
     
-    @ObservedObject var commentCount = Comment()
+    
+    //var url  = "https://app-designer2.io"
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
@@ -37,7 +43,7 @@ struct DetailView: View {
             .resizable()
                 .frame(height: 300)
                 
-                if self.detail.offer == self.offer {
+                if self.detail.oldPrice == self.offer {
                             
                    Text("Offer only for today")
                     .italic()
@@ -93,10 +99,10 @@ struct DetailView: View {
                 Text("\(detail.detail!)")
                 
                 HStack {
-                    Text("\(detail.before!)").strikethrough()
+                    Text("€\(detail.oldPrice)").strikethrough()
                         .foregroundColor(.gray)
                 
-                    Text("\(detail.prices!)")
+                    Text("€\(detail.prices)")
                         .bold()
                         .underline(true, color: .red)
                         .foregroundColor(.red)
@@ -105,18 +111,12 @@ struct DetailView: View {
                 VStack(spacing: 15) {
                 Button(action: {
                     //self.detail.rating += 1
-                    
-                    
-                    
                     self.order.toggle()
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                         self.order = false
-                        //After 2 second the alert pop will deseapper
+                        //After 4 second the alert pop will deseappear
                     }
-                    //I hope you like it, the GitHub Link will be on the description
-                    //Dont forget to subscribe + like + share with others
-                    //See you on the next one
                     
                 }) {
                     HStack {
@@ -124,7 +124,7 @@ struct DetailView: View {
                         
                         Text("order now")
                         
-                        Text("\(detail.prices!)")
+                        Text("€\(detail.prices)")
                         .bold()
                         
                     }.foregroundColor(.white)
@@ -138,7 +138,12 @@ struct DetailView: View {
                 Spacer()
                     //CircleShart()
                         
+                    //This implementation will send us to Safari Browser to navigate on the website that we have added
+                    Link("Visit our website", destination: URL(string: "\(self.detail.url ?? "")")!)
+                        
+                        
                     
+            
                 }
                 }.padding()
             .alert(isPresented: self.$order) {
