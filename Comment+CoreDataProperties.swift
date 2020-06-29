@@ -18,12 +18,29 @@ extension Comment {
     }
 
     @NSManaged public var comment: String?
-    @NSManaged public var hour: String?
+    @NSManaged public var profile: Data?
     @NSManaged public var date: Date?
-    @NSManaged public var food: Food?
-    
-    public var commentName: String {
-        comment ?? "App Designer2"
-    }
+    @NSManaged public var food: NSSet?
 
+    public var commentName : String {
+        comment ?? ""
+    }
+}
+
+// MARK: Generated accessors for food
+extension Comment {
+
+    @objc(addFoodObject:)
+    @NSManaged public func addToFood(_ value: Food)
+
+    @objc(removeFoodObject:)
+    @NSManaged public func removeFromFood(_ value: Food)
+
+    @objc(addFood:)
+    @NSManaged public func addToFood(_ values: NSSet)
+
+    @objc(removeFood:)
+    @NSManaged public func removeFromFood(_ values: NSSet)
+
+    
 }
